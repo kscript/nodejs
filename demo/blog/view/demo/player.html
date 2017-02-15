@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title></title>
+<link rel="stylesheet" href="{~css}default.min.css">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<script src="{~js}flexible.js"></script>
+<script src="{~js}jquery-1.7.2.min.js"></script>
+<!-- <script src="{~js}jQuery-m1.1.js"></script> -->
+<style>
+body{
+	color: #333;
+}
+@font-face {
+font-family: 'iconfont';  /* project id 201644 */
+src: url('//at.alicdn.com/t/font_1w4tss1hie7v6lxr.eot');
+src: url('//at.alicdn.com/t/font_1w4tss1hie7v6lxr.eot?#iefix') format('embedded-opentype'),
+url('//at.alicdn.com/t/font_1w4tss1hie7v6lxr.woff') format('woff'),
+url('//at.alicdn.com/t/font_1w4tss1hie7v6lxr.ttf') format('truetype'),
+url('//at.alicdn.com/t/font_1w4tss1hie7v6lxr.svg#iconfont') format('svg');
+}
+i,.iconfont{
+	font-family:"iconfont" !important;
+	font-size:16px;
+	font-style:normal;
+	-webkit-font-smoothing: antialiased;
+	/* -webkit-text-stroke-width: 0.2px; */
+	-moz-osx-font-smoothing: grayscale;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+}
+.module{
+	width: 100%;
+}
+.main .menu .col-3{
+	/* border-left: 1px solid #ddd; */
+	padding: .25rem 0;
+	margin-left: -1px;
+}
+.main .menu i{
+	font-size: .5rem;
+}
+.main .music-list{
+	padding:.3rem .2rem;
+	border-top: 1px solid #eee;
+}
+.main .music{
+	margin-bottom: .15rem;
+	cursor: default;
+}
+.main .music.active{
+	background-color: #eee;
+}
+.main .music .icon-poster{
+	display: none;
+}
+.main .music.active .icon-poster{
+	width: 1.4rem;
+	height: 1.4rem;
+	background-position: center;
+	-webkit-background-size: 100% auto;
+	background-size: 100% auto;
+	margin-right: .15rem;
+	display: block;
+}
+.main .music .music-info{
+	font-size: .4rem;
+	line-height: .5rem;
+	padding: .15rem .15rem 0rem;
+}
+.main .music .music-time{
+	margin-right: .1rem;
+}
+.main .music .other{
+	margin-top: .1rem;
+	display: none;
+}
+.main .music.active .other{
+	display: block;
+}
+.foot{
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	padding:.24rem 0;
+	width: 100%;
+	color: #fff;
+	background: rgb(0,129,223);
+}
+.foot .content{
+	padding:.1rem .3rem 0;
+}
+.foot .control{
+	margin-right: .2rem;
+}
+.foot i{
+	font-size: 1rem;
+}
+.foot i:active{
+	color: #cfebff!important;
+}
+.foot .progress-box{
+	width: 100%;
+	height: 3px;
+	margin: .25rem 0;
+	background-color: #0066b1;
+	cursor: pointer;
+}
+.foot .progress{
+	width: 5px;
+	height: 7px;
+	margin-left: -3px;
+	background-color: #86ccff;
+	cursor: pointer;
+	left:0;
+	top:-2px;
+}
+.foot .progress-bg{
+	width:0;
+	height: 3px;
+	background: #86ccff;
+}
+
+</style>
+</head>
+<body class="yahei">
+	<div class="page">
+		<div class="header">
+			<video id="video" class="video hide" src="" loop>
+				<source/>
+			</video>
+		</div>
+				<div class="test">
+		<input type="radio" name="as" id="" value="1" class="aa">
+		<input type="radio" name="as" id="" value="2" class="aa">
+		<input type="radio" name="as" id="" value="3" class="aa">
+		<input type="radio" name="as" id="" value="4" class="aa">
+		</div>
+		<div class="main">
+			<div class="module">
+				<dl class="menu text-center row">
+					<dd class="col-3 left"><i>&#xe60b;</i></dd>
+					<dd class="col-3 left"><i>&#xe609;</i></dd>
+					<dd class="col-3 left"><i>&#xe61b;</i></dd>
+					<dd class="col-3 left"><i>&#xe6a1;</i></dd>
+				</dl>
+				<dl class="music-list">
+					<dd class="music clear">
+						<div class="icon-poster left" style="background-image:url({~img}singer.jpg);">
+						</div>
+						<div class="info-box">
+							<div class="music-info clear">
+								<span class="music-name">
+									歌曲名歌曲名歌曲名歌曲名
+								</span>
+								<span class="time right">3:26</span>
+								<div class="other clear">
+									<div class="music-time left">00:00/3:26</div>
+									<div class="icons-handle left"><i>&#xe6b7;</i></div>
+								</div>
+							</div>
+						</div>
+					</dd>
+					<dd class="music clear">
+						<div class="icon-poster left" style="background-image:url({~img}singer.jpg);">
+						</div>
+						<div class="info-box">
+							<div class="music-info clear">
+								<span class="music-name">
+									歌曲名歌曲名歌曲名歌曲名
+								</span>
+								<span class="time right">3:26</span>
+								<div class="other clear">
+									<div class="music-time left">00:00/3:26</div>
+									<div class="icons-handle left"><i>&#xe6b7;</i></div>
+								</div>
+							</div>
+						</div>
+					</dd>
+				</dl>
+			</div>
+		</div>
+		<div class="foot clear">
+			<div class="module">
+				<div class="content">
+					<div class="music-name fn-nowrap"></div>
+					<div class="control-box left clear">
+						<div class="control prev left"><i>&#xe6b8;</i></div>
+						<div class="control play left"><i>&#xe60c;</i></div>
+						<div class="control next left"><i>&#xe62c;</i></div>
+					</div>
+					<div class="progress-box rel left">
+						<div class="progress abs"></div>
+						<div class="progress-bg"></div>
+					</div>
+					<div class="icons-handle left">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+	var json=[
+		{name:"123",src:"http://cc.stream.qqmusic.qq.com/C100002avTWn0apCIO.m4a?fromtag=52"},
+		{name:"456",src:"http://cc.stream.qqmusic.qq.com/C100002avTWn0apCIO.m4a?fromtag=52"}];
+	
+	/*$(".music-list").append($.tpl('<dd class="music clear">\
+						<div class="icon-poster left" style="background-image:url({~img}singer.jpg);">\
+						</div>\
+						<div class="info-box">\
+							<div class="music-info clear">\
+								<span class="music-name">{*name}</span>\
+								<span class="time right">3:26</span>\
+								<div class="other clear">\
+									<div class="music-time left">00:00/3:26</div>\
+									<div class="icons-handle left"><i>&#xe6b7;</i></div>\
+								</div>\
+							</div>\
+						</div>\
+					</dd>',json));*/
+	$(function(){
+		var video=$(".video").get(0);
+		$(".music-list .music").on("click",function(e){
+			var index=$(this).index();
+			$(this).addClass("active").siblings().removeClass("active");
+			$(".video").attr("src",json[index].src);
+		});
+		$(".progress-box").on("touchstart",function(e){
+			var touches=e.touches[0];
+			var width=$(this).width();
+			var left=$(this).offset().left;
+			var num=((touches.pageX-left)/width)*100;
+			if(num<0){
+				num=0
+			}
+			if(num>100){
+				num=100
+			}
+			video.currentTime=Math.floor(video.duration*num/100);
+		})
+		video.ontimeupdate=function(){
+			var num=video.currentTime/video.duration;
+	
+			$(".progress-box .progress").css({left:num*100+"%"});
+			$(".progress-box .progress-bg").css({width:num*100+"%"});
+		};
+	})
+	</script>
+</body>
+</html>

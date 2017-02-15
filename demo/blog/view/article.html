@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>个人博客</title>
+<link rel="stylesheet" href="{~css}default.min.css">
+<link rel="stylesheet" href="{~css}style.css">
+<link rel="stylesheet" href="{~css}iconfont.css">
+<link rel="stylesheet" href="{~css}animate.min.css">
+<script src="{~js}jquery-1.7.2.min.js"></script>
+<style>
+.read-article .article{
+	margin-bottom: 0;
+}
+.nav a{color: #fff;}
+.nolist{list-style:none;margin-left:0}
+.feddaily-list{list-style:none;margin:0}
+.feddaily-list li{margin-bottom:10px;border:1px solid #ddd;border-radius:4px;background:#fff}
+.fedimg{margin-top:10px;max-width:332px;max-height:249px;overflow:hidden}
+.fed-con{padding:10px}
+.fed-title{font-size:18px;line-height:24px}
+.feddaily p{margin-bottom:5px}
+.feddaily .info{font-size:16px}
+.fed-con em{display:inline-block;margin:0 5px}
+.fed-meta{color:#999;margin-bottom:5px;font-size:12px;background:#f7f7f7;border-bottom:1px solid #ddd;border-top-left-radius:3px;border-top-right-radius:3px;padding:6px 10px;color:#767676}
+.hentry .entry-content .fed-title a:hover{color:#ea4c89;text-decoration:none}
+.reply-list{background-color: #fff;}
+.reply-list .title{
+	background: #6eb4c7;
+	color: #fff;
+	line-height: 40px;
+	font-size: 16px;
+	padding-left: 10px;
+	margin-bottom: 10px;
+	border-radius: 5px 5px 0 0;
+}
+.reply-box{
+	padding: 0px 10px;
+}
+.reply .user-info{
+	width: 100%;
+	height: 36px;
+	line-height: 36px;
+	padding: 0px 10px;
+	box-sizing: border-box;
+	color: #ea4c89;
+	/* border-bottom: 1px solid #eee; */
+	color:#666;
+	/* background-color: #eee; */
+}
+.reply-box .reply{margin-bottom: 10px;border-bottom: 1px solid #eee;}
+.reply .user-info .time{font-size: 12px;}
+.reply .user-info .floor{font-size: 12px;}
+.reply .context{
+	min-height: 24px;
+	line-height: 24px;
+	padding:0px 10px 50px;
+	box-sizing: border-box;
+}
+.reply a{
+	color: #ea4c89;
+}
+.send-reply{
+	padding: 15px;
+}
+.send-reply .textarea{
+	outline: 0;
+	width: 100%;
+	height: 200px;
+	padding: 5px;
+	margin:-5px;
+	border-color:#ddd; 
+	resize: none;
+}
+</style>
+</head>
+<body class="yahei">
+<div class="page read-article">
+	<div class="header">
+		<div class="module">
+			<div class="blog-title">
+				我的博客
+			</div>
+			<div class="blog-note">
+				用于nodejs 及 php 测试
+			</div>
+		</div>
+	</div>
+	<div>
+
+
+	<!-- <node assign="html" key="test" type="each">
+		<li>{~text}</li>
+	</node> -->
+	</div>
+	{tpl:view/menu.html}
+
+	<div class="main">
+		<div class="module clear">
+			<div class="lay-left left">
+				<node key="article" type="each">
+				<div class="article {~cls}">
+					<div class="hd">
+						<div class="title">{~title}</div>
+						<div class="info clear">
+							<div class="poster left">作者：<span class="text">{~user}</span></div>
+							<div class="time left">发布时间：<span class="text">{~time|datatime}</span></div>
+							<div class="view left">阅读：<span class="text">{~view}</span></div>
+							<div class="reply left">回复：<span class="text">{~reply}</span></div>
+							<div class="tag right">{~tag|setTag|1,2,3}</div>
+						</div>
+					</div>
+					<div class="bd clear">
+						<div class="summary all">
+							{~text}
+						</div>
+						
+					</div>
+				</div>
+				</node>
+				
+				<div class="reply-list">
+					<div class="title">评论列表</div>
+					<div class="send-reply">
+						<textarea class="textarea"></textarea>
+					</div>
+					<ul class="reply-box">
+						<node type="each" key="replys">
+						<li class="reply">
+							
+							<div class="user-info clear">
+								<span class="floor right">{~id}楼</span> <a href="/user/panel/{~uid}">{~user}</a> <span class="time">{~time|datatime}</span>
+							</div>
+							<div class="context">
+							{~text}
+							</div>
+						</li>
+						</node>
+						
+					</ul>
+					<style>
+					.page-box{
+						width: 100%;
+						height: 48px;
+						background-color: #fff;
+					}
+					.pages{
+						padding:4px 20px;
+					}
+					.pages .pageno:hover{
+						color: #fff;
+						background-color: #6eb4c7;
+					}
+					.pages .pageno{
+						width: 32px;
+						height: 30px;
+						line-height: 30px;
+						text-align: center;
+						display: inline-block;
+						*display: inline;
+						*zoom: 1;
+						color: #6eb4c7;
+						border:1px solid #6eb4c7;
+						margin-right: 5px;
+					}
+					.pages .prev,.pages .next{
+						width: 100px;
+						text-align: center;
+					}
+					</style>
+					<div class="page-box">
+						<div class="pages text-center">
+							<a href="javascript:void(0);" class="pageno prev">上一页</a>
+							<node type="each" key="page">
+								<a href="javascript:void(0);" data-page="{~pageno}" class="pageno">{~pageno}</a>
+							</node>
+							<a href="javascript:void(0);" class="pageno next">下一页</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="lay-right left">
+				<div class="subs sub1">
+					{tpl:./view/subs.html}
+				</div>
+			</div>
+		</div>
+	</div>
+<script>
+$(".send-reply textarea").on("keyup",function(e){
+	if(e.ctrlKey&&e.keyCode===13){
+		var poster={
+				id:{~id},
+				uid:{~uid},
+				user:'{~user}',
+				time:new Date().getTime(),
+				text:$(this).val()
+			};
+		$.ajax({
+			type:"POST",
+			url:"{~url}index/api/article",
+			data:poster,
+			dataType:'json',
+			success:function(data){
+				if(parseInt(data.status)==1){
+					html=$('<li class="reply">\
+						<div class="user-info clear">\
+							<span class="floor right">'+data.id+'楼</span> <a href="/user/panel/'+data.uid+'">'
+							+data.user+'</a> <span class="time">'+data.time+'</span>\
+						</div>\
+						<div class="context">\
+						'+data.text+'\
+						</div>\
+					</li>');
+					$(".reply-box").prepend(html).fadeIn(200);
+				}
+			}
+		})
+	}
+})
+</script>
+</div>
+</body>
+</html>

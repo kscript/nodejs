@@ -1,0 +1,31 @@
+<script src="{~js}vue.js"></script>
+<dl class="list">
+<dd @click="select(index)" v-for="(info,index) in json" v-bind:class="{'active':info.selected}">
+	{{info.selected}}
+</dd>
+</dl>
+<script>
+	var list= new Vue({
+		el:".list",
+		data(){
+			return {
+				json:[
+					{name:"a",src:"http://cc.stream.qqmusic.qq.com/C100002avTWn0apCIO.m4a?fromtag=52",selected:false},
+					{name:"b",src:"",selected:false},
+					{name:"c",src:"http://cc.stream.qqmusic.qq.com/C100002avTWn0apCIO.m4a?fromtag=52",selected:false}
+				]
+			}
+		},
+		methods:{
+			select(index) {
+				this.json.map( a => (a.selected = false));
+				this.json[index].selected = true;
+				play.call(this,index);
+			}
+		}
+	});
+	function play(index){
+		
+		console.log(this,index);
+	}
+</script>

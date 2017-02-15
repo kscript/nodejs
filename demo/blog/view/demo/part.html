@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title></title>
+<link rel="stylesheet" href="{~css}default.min.css">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<script src="{~js}flexible.js"></script>
+<!-- <script src="{~js}jquery-1.7.2.min.js"></script> -->
+<script src="{~js}jQuery-m1.1.js"></script>
+<div class="page">
+	<div class="main">
+		<canvas id="canvas" class="level0 canvas" width="1280" height="800"></canvas>
+	</div>
+</div>
+<script>
+	function Part(){
+	}
+	Part.prototype={
+		constructor:Part,
+		extend:function (source,target){
+			if(!target){
+				target=this;
+			}
+			for(var key in source){
+				target[key]=source[key];
+			}
+			return target;
+		}
+	}
+</script>
+<script>
+	var canvas=document.getElementById("canvas");
+	var cxt=canvas.getContext("2d");
+	var part=new Part(300,200);
+	part.extend({
+		width:300,
+		height:200,
+		boxWidth:1280,
+		boxHeight:800,
+		x:450,
+		y:300,
+		offset:10,
+		duration: 4000,//持续时间
+		interval: 10,//间隔
+		cxt:cxt,
+		src:"{~img}4.png",
+		target:"{~img}ad.jpg",
+		color:"#006eff",
+		speed:1,
+		ease:"ease",
+		imgData:[],
+		ratioX:1,
+		ratioY:1
+	})
+	part.extend({
+		getImg:function(fn,src){
+			var img=new Image();
+			var that=this;
+			img.onload=function(){
+				img.width=that.width;
+				img.height=that.height;
+				that.cxt.drawImage(img,that.x,that.y,that.width,that.height);
+				fn&&fn.call(that);
+			}
+			img.src=src||that.src;
+		},
+		getData:function(){
+			var that=this;
+			var imgData=that.cxt.getImageData(that.x,that.y,that.width,that.height);
+			data=that.filter(imgData.data);
+			that.imgData.push(data);
+
+		},
+		filter:function(data){
+			var that=this;
+			var res=[];
+			var width=that.width;
+			for(var i=0,len=data.length;i<len;i+=4){
+				if(data[i]>250){
+					coor={
+						x0:that.x,
+						y0:that.y,
+						x1:(i/4)%width+(Math.random() - 0.5)*that.offset,
+						y1:Math.floor(i/4/width)+(Math.random() - 0.5)*that.offset,
+						fillStyle:that.color,
+						delay:Math.floor(i/4/width)/20,
+						currTime: 0,
+						count: 0,
+						duration:parseInt(that.duration / 16.66) + 1,
+						interval:parseInt(Math.random() * 10 * that.interval),
+						ease:that.ease,
+						ratioX:that.ratioX,
+						ratioY:that.ratioY,
+						index:i
+					};
+					res.push(coor);
+				}
+			}
+			return res;
+		},
+		draw:function(){
+			
+		}
+	})
+</script>
+</body>
+
+</html>

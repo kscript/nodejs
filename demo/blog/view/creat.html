@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>个人博客</title>
+<link rel="stylesheet" href="{~css}default.min.css">
+<link rel="stylesheet" href="{~css}style.css">
+<link rel="stylesheet" href="{~css}iconfont.css">
+<link rel="stylesheet" href="{~css}animate.min.css">
+<script src="{~js}jquery-1.7.2.min.js"></script>
+<style>
+.read-article .article{
+	margin-bottom: 0;
+}
+.nav a{color: #fff;}
+.nolist{list-style:none;margin-left:0}
+.feddaily-list{list-style:none;margin:0}
+.feddaily-list li{margin-bottom:10px;border:1px solid #ddd;border-radius:4px;background:#fff}
+.fedimg{margin-top:10px;max-width:332px;max-height:249px;overflow:hidden}
+.fed-con{padding:10px}
+.fed-title{font-size:18px;line-height:24px}
+.feddaily p{margin-bottom:5px}
+.feddaily .info{font-size:16px}
+.fed-con em{display:inline-block;margin:0 5px}
+.fed-meta{color:#999;margin-bottom:5px;font-size:12px;background:#f7f7f7;border-bottom:1px solid #ddd;border-top-left-radius:3px;border-top-right-radius:3px;padding:6px 10px;color:#767676}
+.hentry .entry-content .fed-title a:hover{color:#ea4c89;text-decoration:none}
+.editor .title{
+	width: 820px;
+	padding: 5px 10px;
+	height: 24px;
+	line-height: 32px;
+	margin-bottom: 5px;
+	border:1px solid #eee;
+}
+.editor .context{
+	width: 820px;
+	padding:10px;
+	height:480px;
+	outline: 0;
+	border:1px solid #eee;
+	resize: none;
+}
+</style>
+</head>
+<body class="yahei">
+<div class="page read-article">
+	<div class="header">
+		<div class="module">
+			<div class="blog-title">
+				我的博客
+			</div>
+			<div class="blog-note">
+				用于nodejs 及 php 测试
+			</div>
+		</div>
+	</div>
+	<div>
+
+
+	<!-- <node assign="html" key="test" type="each">
+		<li>{~text}</li>
+	</node> -->
+	</div>
+	{tpl:view/menu.html}
+
+	<div class="main">
+		<div class="module clear">
+			<div class="lay-left left">
+				<div class="editor">
+					<div class="hd">
+						<input type="text" placeholder ="请输入文章标题" class="title" >
+					</div>
+					<div class="bd">
+						<textarea class="context">写点什么呢</textarea>
+					</div>
+				</div>
+			</div>
+			<div class="lay-right left">
+				<div class="subs sub1"></div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

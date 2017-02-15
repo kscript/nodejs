@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>开发MVC框架说明文档</title>
+<link rel="stylesheet" href="{~css}default.min.css">
+<link rel="stylesheet" href="{~css}iconfont.css">
+<script src="{~js}/jquery-1.7.2.min.js"></script>
+<script>var jQuery;!jQuery&&document.write("<script src='http://libs.baidu.com/jquery/1.7.2/jquery.min.js'><\/script>");</script>
+<style>
+h{
+	color: red;
+	font-size: 16px;
+	line-height: 24px;
+	margin-right: 3px;
+}
+.doc .lay-left{
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 48px;
+	overflow: hidden;
+	background-color: #4bafcc;
+}
+.doc .layout.tab-open .lay-left{
+	width:150px;
+}
+.doc .layout .btn-open{
+	/* transition:all .3s; */
+}
+.doc .layout.tab-open .btn-open{
+	-webkit-transform: rotateZ(180deg);
+	-ms-transform: rotateZ(180deg);
+	-o-transform: rotateZ(180deg);
+	transform: rotateZ(180deg);
+}
+.doc .layout.tab-open .lay-right{
+	padding-left: 149px;
+}
+.doc .layout.tab-open li.active{
+	color: #fff;
+	background-color: #49c6ea;
+}
+.lay-left dt{
+	border-bottom:1px solid #5bc5e4;
+}
+.lay-left dt:hover{
+	background-color: #5bc5e4;
+}
+.lay-left i{
+	width: 48px;
+	height: 46px;
+	text-align: center;
+	line-height: 52px;
+	font-size: 38px;
+	color: #eee;
+	display: block;
+	cursor: pointer;
+}
+
+.tab{
+	position: absolute;
+	top: 0;
+	left: 48px;
+	height: 100%;
+	width: 101px;
+	background-color: #fff;
+	border-right: 1px solid #ddd;
+}
+.tree{
+	margin-top: 24px;
+	line-height: 24px;
+	background: #fff;
+	background-size: auto 48px;
+	background-origin: content-box;
+	background-image: linear-gradient(#eee 50%,
+	transparent 0);
+}
+.tree li{
+	padding-left: 10px;
+	color: #666;
+	cursor: pointer;
+}
+.doc .lay-right{
+	padding-left: 48px;
+}
+.note{
+	display: none;
+	width: 800px;
+}
+.note.active{
+	display: block;
+}
+.note>dt{
+	line-height: 40px;
+	font-size: 20px;
+	color: #2b8a7c;
+	background-color: #e1e1e1;
+	border-top-right-radius: 5px;
+}
+.note>dt .title{
+	padding:5px 10px;
+}
+.note>dd{
+	padding: 10px;
+	line-height: 24px;
+	min-height: 30px;
+	color: #4bafcc;
+	background-color: #f4f4f4;
+	border-bottom-right-radius: 5px;
+}
+</style>
+</head>
+<body class="yahei">
+	<div class="doc">
+		<div class="layout clear tab-open">
+			<div class="lay-left menu rel">
+				<dl>
+					<dt>
+						<i>&#xe640;</i>
+					</dt>
+					<dd class="tab"></dd>
+				</dl>
+				<dl>
+					<dt>
+						<i class="btn-open">&#xe63b;</i>
+					</dt>
+					<dd class="tab">
+						<ul class="tree">
+							<li class="btn-note active" data-num='0'>模板标签</li>
+							<li class="btn-note" data-num='1'>路由</li>
+							<li class="btn-note" data-num='2'>模板标签</li>
+						</ul>
+					</dd>
+				</dl>
+			</div>
+			<div class="lay-right">
+				<div class="context">
+					<dl class="note active">
+						<h>以下示例中的#是为了模板标签不被渲染，在实际开发中要去除</h>
+						<dt><span class="title">{#~key}</span></dt>
+						<dd>
+							<div class="text">
+								通常用于显示控制器里以this.assign(key,val)形式绑定的变量
+							</div>
+							<div class="text">
+								支持{#~key|fn|arg1,arg2...}形式将模板变量传递给函数:fn(模板变量key,模板变量的实际值val,在标签中传递的参数)
+							</div>
+						</dd>
+						<dt><span class="title">{#tpl:url}</span></dt>
+						<dd>用于加载模板，url应为相对于项目根目录的路径（注：绝对路径有点问题，暂时去掉了）</dd>
+						<dt><span class="title">&lt;#node&gt;&lt;/node&gt;</span></dt>
+						<dd>
+							<div class="text">
+								用于显示从数据库里取出的数据，不可与模板标签{#~key}共用，支持属性：
+							</div>
+							<div class="text">
+								<h>*</h>1、type，目前支持:each(遍历),empty(为空处理) 
+							</div>
+							<div class="text">
+								<h>*</h>2、key，要绑定到的key
+							</div>
+						</dd>
+					</dl>
+					<dl class="note">
+						<dt>
+							<div class="title">
+								路由形式1：Controller/Action/model
+							</div>
+						</dt>
+						<dd>
+							<div class="text">
+								controller为空 默认为显示首页
+							</div>
+							<div class="text">
+								action为空 默认为调用isEmpty函数
+							</div>
+
+						</dd>
+						<dt>
+							<div class="title">
+								路由形式2：?c=index&amp;a=index&amp;m=isEmpty
+							</div>
+							<dd>
+								<div class="text">
+									仅形式不一样，用法同上↑
+								</div>
+							</dd>
+						</dt>
+					</dl>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+	$(".btn-open").on("click",function(){
+		$(this).parents(".layout").toggleClass("tab-open");
+	})
+	$(".btn-note").on("click",function(){
+		if($(this).hasClass("active")){
+			$(this).removeClass("active")
+			$(".note").eq($(this).data("num")).removeClass("active");
+		}else{
+			$(this).addClass("active").siblings().removeClass("active");
+			$(".note").removeClass("active").eq($(this).data("num")).addClass("active");
+		}
+		
+	})
+	</script>
+</html>

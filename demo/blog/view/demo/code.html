@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>加解密</title>
+	<link rel="stylesheet" href="{~css}default.min.css">
+	<script src="{~js}jQuery-m1.1.js"></script>
+	<style>
+	textarea{
+		outline: 0;
+		resize: none;
+	}
+	.main{
+		padding:20px;
+	}
+	.main .hd{
+		margin-bottom: 10px;
+	}
+	.main .hd input{
+		height: 30px;
+		line-height: 2px;
+		padding:1px 10px;
+	}
+	.main .hd input[type="text"]{
+		width: 320px;
+		height: 24px;
+	}
+	.main .bd textarea{
+		width: 300px;
+		height: 280px;
+		padding:5px;
+	}
+
+	</style>
+</head>
+<body>
+	<div class="page">
+		<div class="main">
+			<div class="module">
+				<div class="hd">
+					<input type="text" class="password">
+					<input type="submit" class="enCode btn-md" value="压缩">
+					<input type="submit" class="deCode btn-md" value="解压">
+				</div>
+				<div class="bd">
+					<textarea name="" id="" cols="30" rows="10" class="source"></textarea>
+					<textarea name="" id="" cols="30" rows="10" class="result"></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+
+	function MD(){}
+	MD.extend=function(source,target){
+		target=target||this;
+		for(var key in source){
+			target[key]=source[key];
+		}
+		return target;
+	}
+	MD.extend({
+		run:function(val,type){
+			return type?enCode(val):deCode(val);
+		}
+	})
+	var mm=new MD;
+
+	$(".btn-md").on("click",function(){
+		mm.text=$(".source").val();
+		$(".result").val(MD.run($(".password").val(),$(this).hasClass("enCode")));
+	});
+
+	function code(a){
+		return typeof a=='string'?(b=[],a.replace(/./g,function(m){b.push(m.charCodeAt())}),b):String.fromCharCode.apply("",a);
+	}
+/*	function count(s,o){
+		return o={},s.replace(/./g,function(m){o[m]=1+o[m]||1;}),o;
+	}
+*/
+	function count(s,o){
+		o=mm.o={
+			index:0
+		}
+		mm.ary=[];
+		return s.replace(/./g,function(m){
+			if(o[m]){
+				 return code([o[m]]);
+			}else{
+				mm.ary.push(m);
+				o[m]=o.index++;
+				return code([o[m]]);
+			}
+		});
+	}
+
+	//压缩
+	function enCode(val){
+		var res;
+		res=count(mm.text);
+
+
+		return res;
+	}
+	//解压
+	function deCode(val){
+		var res;
+		var txt=mm.text;
+
+		return res;
+	}
+
+	var obj={
+		numas:[],
+		numbs:[]
+	}
+	//科学计数法 -- 商
+	function getDivide(a,b,end){
+		var numa="";
+		var numb="";
+		if(arguments.length==0)return ;
+		if(!end||isNaN(end)||end>10000||end<0){
+			end=10000;
+		}
+
+		if(a<b){
+			numa+="0.";
+		}
+		function divide(a,b,end){
+			a*=10;
+			var re={a:Math.floor(a/b),b:a%b};
+			numa+=re.a;
+			numb+=re.b;
+			a=re.b;
+			if(end>0){
+				end--;
+				return divide(a,b,end);
+			}else{
+				obj.a=re.b;
+				obj.b=b;
+				obj.numas.push(numa);
+				obj.numbs.push(numb);
+				return numa;
+			}
+		}
+		return divide(a,b,end);
+	}
+
+/*	function getSqrt(num,i,end){
+		var num="";
+		if(!end||isNaN(end)||end>100||end<0){
+			end=100;
+		}
+
+		function sqrt(num,i,end){
+			if(end>0&&num!=0){
+				end--;
+				return sqrt(num,i,end);
+			}else{
+				obj.sqrts.push(num);
+				return num;
+			}
+		}
+		return sqrt(num,i,end);
+	}*/
+	function getSqrt(a,z){
+		end=100;
+		var num=1;
+		var o={};
+		z=z||2;
+		function s(a){
+			var b;
+			a/=z;
+			num*=z;
+			if(end>0&&num<a){
+				end--;
+				o.a=a;o.num=num
+				return s(a)
+			}else{
+			return o;
+			}
+		}
+		return s(a);
+	}
+	function d(){
+		var num=Math.random()*1000;
+		num=~~num;
+		localStorage.num=num;
+		localStorage.res=num*num;
+		return num*num;
+	}
+	</script>
+
+</body>
+</html>

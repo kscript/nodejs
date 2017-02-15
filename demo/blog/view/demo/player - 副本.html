@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="{~css}default.min.css">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<script src="{~js}flexible.js"></script>
+	<script src="{~js}jquery-1.7.2.min.js"></script>
+	<style>
+	body{
+		color: #333;
+	}
+@font-face {
+  font-family: 'iconfont';  /* project id 201644 */
+  src: url('//at.alicdn.com/t/font_1w4tss1hie7v6lxr.eot');
+  src: url('//at.alicdn.com/t/font_1w4tss1hie7v6lxr.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_1w4tss1hie7v6lxr.woff') format('woff'),
+  url('//at.alicdn.com/t/font_1w4tss1hie7v6lxr.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_1w4tss1hie7v6lxr.svg#iconfont') format('svg');
+}
+	i,.iconfont{
+		font-family:"iconfont" !important;
+		font-size:16px;
+		font-style:normal;
+		-webkit-font-smoothing: antialiased;
+		/* -webkit-text-stroke-width: 0.2px; */
+		-moz-osx-font-smoothing: grayscale;
+		display: inline-block;
+		*display: inline;
+		*zoom: 1;
+	}
+	.module{
+		width: 100%;
+	}
+	.main .menu .col-3{
+		/* border-left: 1px solid #ddd; */
+		padding: .25rem 0;
+		margin-left: -1px;
+	}
+	.main .menu i{
+		font-size: .5rem;
+	}
+	.main .music-list{
+		padding:.3rem .2rem;
+		border-top: 1px solid #eee;
+	}
+	.main .music{
+
+		margin-bottom: .15rem;
+		cursor: default;
+	}
+	.main .music.active{
+		background-color: #eee;
+	}
+	.main .music .icon-poster{
+		display: none;
+	}
+	.main .music.active .icon-poster{
+		width: 1.2rem;
+		height: 1.2rem;
+		background-position: center;
+		-webkit-background-size: 100% auto;
+		background-size: 100% auto;
+		margin-right: .15rem;
+		display: block;
+	}
+	.main .music .music-info{
+		font-size: .4rem;
+		line-height: .5rem;
+		padding: .15rem .15rem .05rem;
+	}
+	.main .music .music-time{
+		margin-right: .1rem;
+	}
+	.main .music .other{
+		margin-top: .1rem;
+		display: none;
+	}
+	.main .music.active .other{
+		display: block;
+	}
+	.foot{
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		padding:.24rem 0;
+		width: 100%;
+		color: #fff;
+		background: rgb(0,129,223);
+	}
+	.foot .control{
+		margin-left: .2rem;
+	}
+	.foot i{
+		font-size: 1rem;
+	}
+	</style>
+</head>
+<body class="yahei">
+	<div class="page">
+		<div class="header">
+			<video id="video" class="video hide" src=""></video>
+		</div>
+		<div class="main">
+			<div class="module">
+				<dl class="menu text-center row">
+					<dd class="col-3 left"><i>&#xe60b;</i></dd>
+					<dd class="col-3 left"><i>&#xe609;</i></dd>
+					<dd class="col-3 left"><i>&#xe61b;</i></dd>
+					<dd class="col-3 left"><i>&#xe6a1;</i></dd>
+				</dl>
+				<dl class="music-list">
+					<dd class="music clear">
+						<div class="icon-poster left" style="background-image:url({~img}singer.jpg);">
+						</div>
+						<div class="info-box">
+							<div class="music-info clear">
+								<span class="music-name">
+									歌曲名歌曲名歌曲名歌曲名
+								</span>
+								<span class="time right">3:26</span>
+								<div class="other clear">
+									<div class="music-time left">00:00/3:26</div>
+									<div class="icons-handle left"><i>&#xe6b7;</i></div>
+								</div>
+							</div>
+						</div>
+					</dd>
+					<dd class="music clear">
+						<div class="icon-poster left" style="background-image:url({~img}singer.jpg);">
+						</div>
+						<div class="info-box">
+							<div class="music-info clear">
+								<span class="music-name">
+									歌曲名歌曲名歌曲名歌曲名
+								</span>
+								<span class="time right">3:26</span>
+								<div class="other clear">
+									<div class="music-time left">00:00/3:26</div>
+									<div class="icons-handle left"><i>&#xe6b7;</i></div>
+								</div>
+							</div>
+						</div>
+					</dd>
+				</dl>
+			</div>
+		</div>
+		<div class="foot clear">
+
+			<div class="control-box left clear">
+				<div class="control prev left"><i>&#xe6b8;</i></div>
+				<div class="control play left"><i>&#xe60c;</i></div>
+				<div class="control next left"><i>&#xe62c;</i></div>
+			</div>
+			<div class="progress-box left">
+				<div class="Progress"></div>
+			</div>
+			<div class="icons-handle .left">
+
+			</div>
+		</div>
+	</div>
+	<script>
+	(function(window,document){
+		var that,
+			cache={a:1},
+			jQuery = window.jQuery = window._s=function (selector,context){
+				return new jQuery.fn.init(selector,context);
+			};
+		jQuery.fn=jQuery.prototype={
+			constructor:jQuery,
+			init:function(selector,context){
+				that=this;
+				context=context||document;
+				that.context=context;
+				if(!that.hard&&cache[selector]){
+					that.hard=true;
+					console.log("取得缓存数据"+selector);
+					return cache[selector];
+				}
+				
+				//处理选择器，并生成结果
+				var res=jQuery.makeArray.call(that,jQuery.select.call(that,selector,context));
+				jQuery.setCache(selector,res);
+				return res;
+			}
+		};
+
+		jQuery.extend=jQuery.fn.extend=function (source,target){
+			if(!target){
+				target=this;
+			}
+			for(var key in source){
+				target[key]=source[key];
+			}
+			return target;
+		};
+
+		jQuery.extend({
+			getCache:function(selector){
+				if(selector&&typeof selector==="string"){
+					return cache[selector];
+				}else{
+					return cache;
+				}
+			},
+			setCache:function(selector,value){
+				if(selector&&typeof selector==="string"){
+					cache[selector]=value||undefined;
+				}
+					return cache;
+			}/*,
+			refresh:function(selector,context){
+				this.hard=true;
+				context=context||document;
+				try{
+					return jQuery.fn.init(selector,context);
+				}catch(e){
+					return this;
+				}
+			}*/
+		})
+		
+		jQuery.extend({
+			id:function(id,cxt){
+				return [cxt.getElementById(id)];
+			},
+			tag:function(tag,cxt){
+				return cxt.getElementsByTagName(tag);
+			},
+			cls:function(cls,cxt){
+				//使用class建议设置cxt
+				var ary=cxt.getElementsByTagName("*"),
+					nodelist=[];
+
+				jQuery.fn.each(function(k,i){
+					if(jQuery.fn.hasClass(k,cls)){
+						nodelist.push(k);
+					}
+				},ary);
+
+				return nodelist;
+			},
+			select:function(sel,cxt){
+
+				//传入字符串
+				if(typeof sel ==="string"){
+
+					var a=sel.charAt(0),
+						b=sel.substr(1),
+						ary=sel.split(/,| /);
+					//判断选择器是否为元字符
+					if(ary.length==1||/\[|</.test(a)){
+
+						if(a==="."){
+							return jQuery.cls(b,cxt);
+						}else if(a==="#"){
+							return jQuery.id(b,cxt);
+						}else if(a==="["){
+
+						}else if(a==="<"){
+
+						}else{
+							var clsAry=sel.split(".");
+							var res=jQuery.tag(clsAry[0],cxt);
+							if(clsAry.length>1){
+								var nodes=[];
+								var clss=sel.substr(sel.indexOf(".")+1);
+								jQuery.fn.each(function(k,i){
+									if(jQuery.fn.hasClass(k,clss)){
+										nodes.push(k);
+									}
+								},res);
+								res=nodes;
+							}
+							
+							return res;
+						}
+
+
+					//选择器字符集
+					}else{
+						var list;
+						var res=jQuery.select(ary[0],cxt);
+						for(var i=0;i<ary.length-1;i++){
+							list=[];
+							jQuery.fn.each(function(k1,i1){
+								list.push([].slice.call(jQuery.select(ary[i+1],k1)));
+							},res);
+							res=Array.prototype.concat.apply([],list);
+						}
+						
+						return res;
+					}
+				}else if(sel instanceof Array){
+
+				}
+				return this;
+			},
+			
+			makeArray:function(nodelist){
+				this.nodelist=nodelist;
+				this.length=nodelist.length;
+				return this;
+			}
+		});
+
+		//函数工具
+		jQuery.fn.extend({
+	
+			each:function(fn,data){
+				
+				if(!arguments.length)return this;
+
+				var i=0;
+				data=data||that.nodelist;
+				if(data instanceof Array){
+
+					for(i=0,len=data.length;i<len;i++){
+					//	console.debug(len,data);
+						fn.call(this,data[i],i);
+					}
+				}else{
+					for(var k in data){
+						fn.call(this,data[k],i,k);
+						i++;
+					}	
+				}
+				
+				return this;
+			}
+
+		});
+
+
+		//dom操作
+		jQuery.fn.extend({
+			css:function(){
+				var a=arguments;
+				var sty="";
+				var ary=[];
+
+				//使用cssText前先拼接css样式
+				if(a.length>1){
+					sty=a[0]+":"+a[1];
+				}else if(typeof a[0] ==="string"){
+					if(/:/.test(a[0])){
+						sty=a[0];
+					}else {
+						//参数只有一个，并且不包含:则获取其this.nodelist/this.nodelist[0]的a[0]属性
+						return jQuery.fn.getStyle(this.nodelist.length?this.nodelist:this.nodelist[0],a[0])
+					}
+				
+				}else{
+					jQuery.fn.each(function(v,i,k){
+						k=k.replace(/[A-Z]/g,function(m){
+							return "-"+m.toLowerCase();
+						})
+						ary.push(k+":"+v);
+					},a[0]);
+
+					sty=ary.join(";");
+
+					jQuery.fn.each(function(k,i){
+						k.style.cssText+=sty;
+					});
+				}
+
+				try{
+					jQuery.fn.each(function(k,i){
+						k.style.cssText+=sty;
+					})
+				}catch(e){
+					this.nodelist.style.cssText+=sty;
+				}
+			},
+			getStyle:function (ele,val){
+				ele=ele.length?ele[0]:ele;
+				try{
+					return window.getComputedStyle(ele)[val]
+				}catch(e){
+					return ele.currentStyle[val]
+				}
+			},
+			hasClass:function(ele,cls){
+				cls=cls.replace(/\s{2,}/," ");
+				var clss=cls.split(".");
+				var reg;
+				if(clss.length==1){
+					//cls在前中后位置 (^cls\s|\scls\s|\scls$)
+					reg=new RegExp("(^"+cls+"\\s|\\s"+cls+"\\s|\\s"+cls+"$|^"+cls+"$)","g");
+					return !!reg.test(ele.className);
+				}else if(clss.length>1&&ele.className){
+					reg=new RegExp("( "+clss.join(")( ")+")");
+					return !!reg.test(" "+ele.className);
+				}else{
+					return false;
+				}
+				
+			},
+			addClass:function(cls){
+				if(cls){
+					jQuery.fn.each(function(k,i){
+						if(!jQuery.fn.hasClass(k,cls)){
+							k.className+=" "+cls;
+						}
+					})
+				}
+				return this;
+			},
+			removeClass:function(cls){
+				if(cls){
+					cls=cls.split(" ");
+					var reg=new RegExp("(\\s"+cls.join("||\\s")+")","g");
+					console.log(reg)
+					jQuery.fn.each(function(k,i){
+						k.className=(" "+k.className).replace(reg,function(m){
+							console.log(arguments);
+							return '';
+						});
+					});
+				}
+				return this;
+			},
+			attr:function(){
+				var a=arguments;
+				try{
+					if(a.length===2){
+						jQuery.fn.each(function(k,i){
+							k.setAttribute(a[0],a[1]);							
+						});
+					}else if(a.length===1){
+						return (this.nodelist.length?this.nodelist[0]:this.nodelist).getAttribute(a[0]);
+					}
+				}catch(e){
+
+				}
+				return this;
+			}
+		});
+
+		jQuery.fn.extend({
+			on:function(){
+				var a=arguments;
+				var type,fn,child;
+				var mod=jQuery.fn.isIE();
+				if(a.length<2){
+					return this
+				}else{
+					type=a[0].split(" ");
+					if(a.length==2){
+						fn=a[1];
+					}else{
+						child=a[1];
+						fn=a[3];
+					}
+				}
+				for(var n=0,len=type.length;n<len;n++){
+					jQuery.fn.each(function(k,i){
+						if(mod){
+							k.attachEvent("on"+type[n],function(e){
+								e.target=e.srcElement;
+								fn.call(that,e)
+							});
+						}else{
+							k.addEventListener(type[n],function(e){
+								e=window.event;
+								fn.call(that,e)
+							});
+						}
+					})
+				}
+			}
+		})
+
+		jQuery.fn.extend({
+			support:function(){
+
+			},
+			isIE:function(){
+				return !!window.attachEvent;
+			}
+		})
+		//用jQuery的原型替代jQuery实例的原型
+		jQuery.fn.init.prototype=window.jQuery.prototype;
+		
+	})(window,document);
+	</script>
+	<script>
+	_s(".music-list .music").on("click",function(){
+		console.log(this);
+	})
+	</script>
+</body>
+</html>

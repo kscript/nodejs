@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" href="{~css}default.min.css">
+	<meta <meta charset="utf-8">
+	<style>
+	.box{
+		width:20px;
+		padding:0px 10px;
+		height:300px;
+		line-height: 300px;
+		background: #000;
+		text-align:-webkit-center;
+		text-align: center;
+		writing-mode:vertical-lr;
+	}
+	.a{
+	  line-height:25px;
+	  color:#fff;
+
+	}
+	.test {
+		padding: 3px;
+		display: inline-block;
+		*display: inline;
+		*zoom: 1;
+	}
+	.test .add,
+	.test .minus{
+		width: 40px;
+		height: 32px;
+		line-height: 30px;
+		text-align: center;
+		color: #fff;
+		cursor: pointer;
+		-moz-user-select: none; /*火狐*/
+		-webkit-user-select: none; /*webkit浏览器*/
+		-ms-user-select: none; /*IE10*/
+		-khtml-user-select: none; /*早期浏览器*/
+		user-select: none;
+	}
+	.test input{
+		width: 60px;
+		padding: 0px 5px;
+		height: 28px;
+		line-height: 30px;
+
+	}
+	</style>
+<script src="{~js}vue.js"></script>
+</head>
+
+<body>
+	<div class="test bg-vivid clear" v-bind:class="{ 'class-a': isA, 'class-b': isB }">
+		<div class="minus left" v-on:click="count(-1)">-</div>
+		<input class="left" type="text" v-model="num">
+		<div class="add left" v-on:click="count(1)">+</div>
+	</div>
+
+<!-- 	<div id="app">
+	<input type="text" v-model="index">
+		<option v-if="status" v-for="option in select" v-bind:value="option.text" v-on:click="hide" >{{ message }}{{ option.text }}</option>
+</div>
+<div id="app-7">
+	<ol>
+		<todo-item v-for="item in list" v-bind:todo="item"></todo-item>
+	</ol>
+</div> -->
+	<script>
+	var test= new Vue({
+		el : ".test",
+		data : {
+			num:0,
+			max:99,
+			min:0,
+			isA: true,
+			isB: false
+		},
+		methods:{
+			count:function(n){
+				this.num=parseInt(this.num);
+				isNaN(this.num)&&(this.num=0);
+				if((this.num<=this.min&&n==-1)||this.num>=this.max)return;
+				this.num+=n;
+			}
+		}
+	})
+	/*var app = new Vue({
+		el: '#app',
+		data: {
+			status:1,
+			index:0,
+			message: 'Hello Vue!',
+			select:[{
+					value:1,
+					text:"北京"
+				},{
+					value:2,
+					text:"上海"
+				}]
+		},
+		methods:{
+			hide:function(){
+				this.index+=1;
+				app.select[0].text="深圳"
+			}
+		}
+	})
+	
+	Vue.component('todo-item', {
+	  props: ['todo'],
+	  template: '<li>{{ todo.text }}</li>'
+	})
+
+	var app7 = new Vue({
+	  el: '#app-7',
+	  data: {
+	    list: [
+	      { text: 'Vegetables' },
+	      { text: 'Cheese' },
+	      { text: 'Whatever else humans are supposed to eat' }
+	    ]
+	  }
+	})*/
+	</script>
+</body>
+</html>

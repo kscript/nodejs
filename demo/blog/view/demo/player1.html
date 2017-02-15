@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title></title>
+<link rel="stylesheet" href="{~css}default.min.css">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<script src="{~js}flexible.js"></script>
+<!-- <script src="{~js}jquery-1.7.2.min.js"></script> -->
+<script src="{~js}jQuery-m1.1.js"></script>
+<style>
+body{
+	color: #333;
+}
+@font-face {
+font-family: 'iconfont';  /* project id 201644 */
+src: url('//at.alicdn.com/t/font_1w4tss1hie7v6lxr.eot');
+src: url('//at.alicdn.com/t/font_1w4tss1hie7v6lxr.eot?#iefix') format('embedded-opentype'),
+url('//at.alicdn.com/t/font_1w4tss1hie7v6lxr.woff') format('woff'),
+url('//at.alicdn.com/t/font_1w4tss1hie7v6lxr.ttf') format('truetype'),
+url('//at.alicdn.com/t/font_1w4tss1hie7v6lxr.svg#iconfont') format('svg');
+}
+i,.iconfont{
+	font-family:"iconfont" !important;
+	font-size:16px;
+	font-style:normal;
+	-webkit-font-smoothing: antialiased;
+	/* -webkit-text-stroke-width: 0.2px; */
+	-moz-osx-font-smoothing: grayscale;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+}
+.module{
+	width: 100%;
+	max-width: 750px;
+}
+.main .menu .col-3{
+	/* border-left: 1px solid #ddd; */
+	padding: .25rem 0;
+	margin-left: -1px;
+}
+.main .menu i{
+	font-size: .5rem;
+}
+.main .music-list{
+	padding:.3rem .2rem;
+	border-top: 1px solid #eee;
+}
+.main .music{
+	margin-bottom: .15rem;
+	cursor: default;
+}
+.main .music.active{
+	background-color: #eee;
+}
+.main .music .icon-poster{
+	display: none;
+}
+.main .music.active .icon-poster{
+	width: 1.4rem;
+	height: 1.4rem;
+	background-position: center;
+	-webkit-background-size: 100% auto;
+	background-size: 100% auto;
+	margin-right: .15rem;
+	display: block;
+	border-radius: 50%;
+}
+.main .music .music-info{
+	font-size: .4rem;
+	line-height: .5rem;
+	padding: .15rem .15rem 0rem;
+}
+.main .music .music-time{
+	margin-right: .1rem;
+}
+.main .music .other{
+	margin-top: .1rem;
+	display: none;
+}
+.main .music.active .other{
+	display: block;
+}
+.foot{
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	padding:.16rem 0;
+	width: 100%;
+	color: #fff;
+	background: rgb(0,129,223);
+}
+.foot .modue{}
+.foot .content{
+	padding:.1rem .3rem 0;
+}
+.foot .control{
+	margin-bottom: .1rem;
+	margin-right: .2rem;
+}
+.foot i{
+	font-size: .9rem;
+}
+.foot i:active{
+	color: #cfebff!important;
+}
+.foot .progress-box{
+	width: 100%;
+	height: 3px;
+	margin: .25rem 0;
+	background-color: #0066b1;
+	cursor: pointer;
+}
+.foot .progress{
+	width: 7px;
+	height: 7px;
+	margin-left: -3px;
+	background-color: #86ccff;
+	cursor: pointer;
+	left:0;
+	top:-2px;
+	border-radius: 50%;
+}
+.foot .progress-bg{
+	width:0;
+	height: 3px;
+	background: #86ccff;
+}
+.music.active .icon-poster{
+	animation:rotate 12s infinite linear;
+	-moz-animation:rotate 12s infinite linear; /* Firefox */
+	-webkit-animation:rotate 12s infinite linear; /* Safari and Chrome */
+	-o-animation:rotate 12s infinite linear; /* Opera */
+}
+.music.paused .icon-poster{
+	animation-play-state:paused;
+	-webkit-animation-play-state:paused;/* Safari 和 Chrome */
+	-moz-animation-play-state:paused;
+	-ms-animation-play-state:paused;
+	-o-animation-play-state:paused;
+}
+@keyframes rotate{
+	0%{
+		transform: rotateZ(0deg);
+	}
+	50%{
+		transform: rotateZ(180deg);
+	}
+	100%{
+		transform: rotateZ(360deg);
+	}
+}
+.foot .music-name{
+	height:.5rem;
+	font-size:.5rem;
+	color:#fff;
+	padding:.06rem .1rem;
+	margin-bottom: .3rem;
+}
+</style>
+</head>
+<body class="yahei">
+	<div class="page">
+		<div class="header">
+			<video id="video" class="video hide" src="" autoplay loop>
+				<source/>
+			</video>
+		</div>
+
+		<div class="main">
+			<div class="module">
+				<dl class="menu text-center row">
+					<dd class="col-3 left"><i>&#xe60b;</i></dd>
+					<dd class="col-3 left"><i>&#xe609;</i></dd>
+					<dd class="col-3 left"><i>&#xe61b;</i></dd>
+					<dd class="col-3 left"><i>&#xe6a1;</i></dd>
+				</dl>
+				<dl class="music-list">
+					<!-- <dd class="music clear">
+						<div class="icon-poster left" style="background-image:url({~img}singer.jpg);">
+						</div>
+						<div class="info-box">
+							<div class="music-info clear">
+								<span class="music-name">
+									歌曲名歌曲名歌曲名歌曲名
+								</span>
+								<span class="time right">3:26</span>
+								<div class="other clear">
+									<div class="music-time left">00:00/3:26</div>
+									<div class="icons-handle left"><i>&#xe6b7;</i></div>
+								</div>
+							</div>
+						</div>
+					</dd> -->
+				</dl>
+			</div>
+		</div>
+		<div class="foot clear">
+			<div class="module">
+				<div class="content">
+					<div class="music-name fn-nowrap"></div>
+					<div class="control-box left clear">
+						<div class="control prev left"><i>&#xe6b8;</i></div>
+						<div class="control play left"><i>&#xe60c;</i></div>
+						<div class="control next left"><i>&#xe62c;</i></div>
+					</div>
+					<div class="progress-box rel left">
+						<div class="progress abs"></div>
+						<div class="progress-bg"></div>
+					</div>
+					<div class="icons-handle left">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+	var json;
+	$.ajax({
+		url:"{~js}list.json",
+		type:"GET",
+		async:false,
+		success:function(data){
+			json=JSON.parse(data);
+		}
+	});
+	var player={
+		status:"init",
+		ele:$(".video"),
+		index:0,
+		play:function(){
+			this.status="play";
+			this.ele.play();
+		}
+	}
+	$(".music-list").append($.tpl('<dd class="music clear">\
+						<div class="icon-poster left" style="background-image:url({~img}singer.jpg);">\
+						</div>\
+						<div class="info-box">\
+							<div class="music-info clear">\
+								<span class="music-name">{*name}</span>\
+								<span class="time right">{*time}</span>\
+								<div class="other clear">\
+									<div class="music-time left"><span class="text">00:00</span>/{*time}</div>\
+									<div class="icons-handle left"><i>&#xe6b7;</i></div>\
+								</div>\
+							</div>\
+						</div>\
+					</dd>',json));
+	$(function(){
+		var video=player.ele.get(0);
+		$(".music-list .music").on("click",function(e){
+			var index=$(this).index();
+			if(index!==player.index||!$(".video").attr("src")){
+				play(index);
+			}else{
+				play(-1);
+			}
+		});
+		$(".progress-box").on("touchstart",function(e){
+			if(!$(".video").attr("src"))return ;
+			var touches=e.touches[0];
+			var width=$(this).width();
+			var left=$(this).offset().left;
+			var num=((touches.pageX-left)/width)*100;
+			if(num<0){
+				num=0
+			}
+			if(num>100){
+				num=100
+			}
+			video.currentTime=Math.floor(video.duration*num/100);
+		})
+		$(".video").on("timeupdate",function(){
+			var num=video.currentTime/video.duration;
+			player.timeEle.html(parseTime(video.currentTime));
+			$(".progress-box .progress").css({left:num*100+"%"});
+			$(".progress-box .progress-bg").css({width:num*100+"%"});
+		});
+		$(".control").on("click",function(){
+			var index=$(this).index();
+			switch(index){
+				case 0:
+					play(-1,1);
+					break;
+				case 1:
+					play(-1);
+					break;
+				case 2:play(1,1);
+					break;
+				default:
+					break;
+			}
+		})
+	})
+	function play(num,mod){
+		if(!arguments.length||isNaN(num))return ;
+		if(mod){
+			//用户点击控制按钮切换上下首音乐
+			player.index+=num;
+			if(player.index<0){
+				player.index=json.length-1;
+			}
+			if(player.index>=json.length){
+				player.index=0;
+			}
+			num=player.index;
+		}else{
+
+			if(num==-1){
+				if(!$(".video").attr("src"))return ;
+				//暂停
+				if(video.paused){
+					video.play();
+					$(".music-list .music").eq(player.index).removeClass("paused");
+				}else{
+					video.pause();
+					$(".music-list .music").eq(player.index).addClass("paused");
+				}
+				return;
+			}
+
+			player.index=num;
+		}
+			//播放
+			player.timeEle=$(".music-time .text").eq(num);
+			$(".music-list .music").eq(num).addClass("active").siblings().removeClass("active");
+			$(".video").attr("src",json[num].src);
+			$(".foot .music-name").html(json[num].name);
+			video.play();
+	}
+	function parseTime(num,mod){
+		num=Math.floor(num);
+		if(mod){
+			if(num<10){
+				return "0"+num;
+			}else if(num<60){
+				return ""+num;
+			}
+		}else{
+			return parseTime(num/60,1)+":"+parseTime(num%60,1);
+		}
+
+	}
+(function(window,document){
+
+	function Dom(){
+		return new Dom.fn.init();
+	}
+	Dom.fn=Dom.prototype={
+		constructor:Dom,
+		init:function(){
+			return this;
+		},
+		attr:function(key,val){
+			return key?(val?(this[key]=val):this[key]):this;
+		}
+	}
+	window.Dom=Dom;
+	Dom.fn.init.prototype=Dom.fn;
+
+})(window,document);
+	</script>
+	
+</body>
+</html>
