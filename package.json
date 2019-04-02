@@ -16,8 +16,7 @@
     "url": "^0.11.0"
   },
   "scripts": {
-    "dev": "node apps",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node apps"
   },
   "keywords": [
     "nodejs"

@@ -4,23 +4,23 @@
  * 应该最先被调用的函数库
  *
  */
-module.exports={
-    extend:function (source,target) {
-        for(var key in source)target[key] = source;
+module.exports = {
+    extend: function (source, target) {
+        for (var key in source) target[key] = source;
         return target;
     },
-    tpl:function (html,data) {
+    tpl: function (html, data) {
 
-        try{
-            return html.replace(/\{~([a-zA-Z_$][a-zA-Z0-9_]{0,})}/g,function (s,m) {
+        try {
+            return html.replace(/\{~([a-zA-Z_$][a-zA-Z0-9_]{0,})}/g, function (s, m) {
                 return data[m];
             })
-        } catch(e) {
+        } catch (e) {
             return html;
         }
     },
-    css:function (url) {
-        define(["require"], function(require) {
+    css: function (url) {
+        define(["require"], function (require) {
             var cssUrl = require.toUrl(url);
             var link = document.createElement("link");
             link.type = "text/css";

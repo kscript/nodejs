@@ -2,70 +2,65 @@
  * Created by yanfa on 2016/11/10.
  */
 
-var that=this;
-
-that.cache=that.cache||{};
-
-
-that.data={
-    host:"localhost",
-    user:"root",
-    password:"root",
-    database:"test",
+var that = this;
+that.config = {
+    host: "localhost",
+    user: "root",
+    password: "root",
+    database: "test",
 };
+
+that.cache = that.cache || {};
+
+
 //连接数据库方法
-that.link=function(conf){
+that.link = function (conf) {
 
     //继承自定义属性到数据库配置
-    extend(conf,that.data);
+    extend(conf, that.config);
 
     //建立连接
-    that.Client = require('mysql').createConnection({
-        host:that.data.host,
-        user:that.data.user,
-        password:that.data.password,
-        database:that.data.database
-    });
+    that.Client = require('mysql').createConnection(config);
     that.Client.connect();
     //选择数据库表
-    that.Client.query('USE '+that.data.database);
+    that.Client.query('USE ' + that.config.database);
     that.Client.query('set names utf8');
 };
 that.link();
-that.query=that.Client.query;
+that.query = that.Client.query;
 //查看数据库表
-that.show=function (db) {
-    that.Client.query("select * from "+db,function (err,data) {
+that.show = function (db) {
+    that.Client.query("select * from " + db, function (err, data) {
         return data;
     });
 };
-that.insert=function(data,call){
-    try{
+that.insert = function (data, call) {
+    try {
         that.Client.query('CREATE TABLE IF NOT EXISTS reply_' + data.id + ' LIKE reply');
     } catch (e) {
         console.err(e);
     }
 
-    try{
-        that.Client.query("INSERT INTO reply_"+data.id+" (`id`, `uid`, `user`, `time`, `text`,`del`) VALUES (NULL,"+data.uid+", '"+data.user+"',"+data.time+", '"+data.text+"', '0')",function(err,res){
-            if(res){
-                data.status=1;
-                data.id=res.insertId;
-                call(err,data);
+    try {
+        that.Client.query("INSERT INTO reply_" + data.id + " (`id`, `uid`, `user`, `time`, `text`,`del`) VALUES (NULL," + data.uid + ", '" + data.user + "'," + data.time + ", '" + data.text + "', '0')", function (err, res) {
+            if (res) {
+                data.status = 1;
+                data.id = res.insertId;
+                call(err, data);
             }
         });
-    }catch(e){
+    } catch (e) {
         console.err(e);
     }
 }
-that.select=function(data,call){
-    that.Client.query('select id , user , time , text from reply_'+data.id+' order by id desc limit 0,10',function(err,res){
-        call(false,res);
+that.select = function (data, call) {
+    that.Client.query('select id , user , time , text from reply_' + data.id + ' order by id desc limit 0,10', function (err, res) {
+        call(false, res);
     });
 }
 
-function extend(source,target) {
-    for(var key in source)target[key] = source;
+function extend(source, target) {
+    for (var key in source) target[key] = source;
     return target;
 
 };
