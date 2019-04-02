@@ -2,14 +2,15 @@
  * Created by yanfa on 2016/9/13.
  */
 var fs = require("fs");
+var path = require("path");
 var http = require('http');
 var url = require('url');
 var session = require('session');
 var query = require("querystring");    //解析POST请求
-var sys=require("./demo/sys.js");
-var sql=require("./demo/sql.js");
-var headInfo=sys.headInfo;
-sys.fs=fs;
+var core=require("./src/core.js");
+var sql=require("./src/sql.js");
+var headInfo=core.headInfo;
+core.fs=fs;
 global.TREE={
     method:"GET",
     data:{}
@@ -24,14 +25,14 @@ global.log=global.console.err= function() {
     console.log.apply(null,a);
     return a;
 };
-sys.assign("url","/");
+core.assign("url","/");
 
 http.createServer(function (req, res) {
     var that=this;
     var link=url.parse(req.url,true);
     var conf,step,status,type;
 
-    sys.media.id=url.parse(req.url,true).query['id'];
+    core.media.id=url.parse(req.url,true).query['id'];
     TREE.method=req.method;
     conf={
         path:link.path,
@@ -46,37 +47,41 @@ http.createServer(function (req, res) {
 
     step = function() {
         return new Promise(function (resolve, reject) {
-            //设置http访问请求头信息
-            sys.test(link.path,function (_type,_path,_status) {
-                type=_type;
-                link.path=_path;
-                status=_status;
-            });
+            var pathInfo = path.parse(link.path)
+            if (pathInfo.ext) {
+                status = 0;
+                type = pathInfo.ext.slice(1);
+            } else {
+                status = 1;
+                type = 'html';
+                link.path = pathInfo.dir.length > 1 ? pathInfo.dir + '/' + pathInfo.base + '.html' : core.index;
+            }
+
             if(status!==1){
                 if(headInfo[type]){
                     res.writeHead(200, {'Content-Type': headInfo[type]+(/ttf|woff/.test(type)?"":";charset=utf-8")});
-                    fs.readFile(sys.path+link.path, function (err, data) {
+                    fs.readFile(core.path+link.path, function (err, data) {
                         if(/html|css|js/.test(type)){
                             try{
-                                res.end(sys.tpl(data.toString(),sys.media));
+                                resolve(res.end(core.tpl(data.toString(),core.media)));
                             } catch(e) {
                                 console.err(link.path);
+                                reject(e)
                             }
 
                         }else{
-                            res.end(data);
+                            resolve(res.end(data));
                         }
                     });
                 }else{
                     res.writeHead(404);
                 }
             }
-
-            reject();
+            resolve()
         });
 
     };
-
+    conf.method = req.method
     if(req.method == "GET"){
         Servers(res,req,conf);
         step();
@@ -92,7 +97,7 @@ http.createServer(function (req, res) {
         })
     }
 
-}).listen(8888);
+}).listen(8881);
 
 function Servers(res,req,conf){
     var ctrl;
@@ -106,7 +111,7 @@ function Servers(res,req,conf){
         $_POST=TREE.data;
     }
 
-    var mvc=sys.route(conf.path);
+    var mvc=core.route(conf.path);
     //0 首页 1 资源路径 2 路由
     var mod=mvc.length?2:mvc;
     if(mod!==1){
@@ -116,7 +121,7 @@ function Servers(res,req,conf){
             mvc=['index','index'];
         }else{
             //填充缺省值
-            mvc=sys.extend(mvc,['index','isEmpty',null]);
+            mvc=core.extend(mvc, ['index','isEmpty',null] );
             //控制器不存在时
             if(!mvc[0]){
                 header.text='<title>error #101</title>控制器错误~';
@@ -126,18 +131,17 @@ function Servers(res,req,conf){
 
         try{
             //调用控制器
-            ctrl=require(sys.path+'controller/'+mvc[0]+'Controller.node.js');
-
+            ctrl=require(core.path+'controller/'+mvc[0]+'Controller.node.js');
             //设置传递给控制器的变量
-            sys.extend({
+            core.extend({
                 level:2,
                 header:header,
                 http:res,
-                sys:sys,
+                core:core,
                 fs:fs,
                 sql:sql,
                 assign:function(){
-                    sys.assign.apply(sys,arguments);
+                    core.assign.apply(core,arguments);
                 },
                 isEmpty:function (text) {
                     //默认动作方法
@@ -150,19 +154,19 @@ function Servers(res,req,conf){
                     res.end(html);
                 },
                 show:function(message,type,code){
-                    res.writeHead(code||200, {'Content-Type': (sys.headInfo[type]?sys.headInfo[type]:'text/html')+';charset=utf-8'});
+                    res.writeHead(code||200, {'Content-Type': (core.headInfo[type]?core.headInfo[type]:'text/html')+';charset=utf-8'});
                     res.end(message);
                 },
                 display:function (path,json,dir) {
                     //加载模板并显示 参数说明：1模板路径 2需要替换的json数据
-                    json=json||sys.media;
-                    var url=sys.path+path;
+                    json=json||core.media;
+                    var url=core.path + path;
                     url=dir||url;
                     if(arguments.length==3){
                         http.get(url, function(results) {
                             results.on("data", function(data) {
                                 if(data){
-                                    res.end(sys.tpl(data.toString(),json));
+                                    res.end(core.tpl(data.toString(),json));
                                 }
                             });
                         });
@@ -173,7 +177,7 @@ function Servers(res,req,conf){
                             res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'});
                             fs.readFile(url, function (err, data) {
                                 try{
-                                    res.end(sys.tpl(data.toString(),json));
+                                    res.end(core.tpl(data.toString(),json));
                                 } catch(e) {
                                     console.err(e);
                                 }
@@ -208,17 +212,18 @@ function Servers(res,req,conf){
             //如果没有成功执行动作则显示提示页面
             //display_error 是否提示错误
             res.writeHead(header.code, header.type);
-            res.end(sys.display_error?header.text:'');
+            res.end(core.display_error?header.text:'');
         }
     }
 }
 // 终端打印如下信息
-console.err('Server running at http://127.0.0.1:8888/?');
+console.err('Server running at http://127.0.0.1:8881/');
 
 var WebSocketServer = require('ws').Server,
     wss = new WebSocketServer({
-        port: 80
+        port: 8880
     });
+    console.err(wss)
 wss.broadcast = function broadcast(s,ws,obs) {
 
     obs&&console.err(obs);
@@ -226,15 +231,14 @@ wss.broadcast = function broadcast(s,ws,obs) {
     wss.clients.forEach(function each(client) {
         if(s == 1){
             //客户端自己
-            if(ws.type==1&&wss.kid!==client.kid){
+            if(ws.type==1 && wss.kid !== client.kid){
                 ws.type=0;
                 var data=JSON.stringify(ws);
-                ws.type=1;
+                ws.type = 1;
                 client.send(data);
-                return;
+            } else {
+                client.send(JSON.stringify(ws));
             }
-
-            client.send(JSON.stringify(ws));
         }
 
         if(s == 0){
@@ -244,16 +248,17 @@ wss.broadcast = function broadcast(s,ws,obs) {
 };
 
 wss.on('connection', function(ws) {
+    ws.send(JSON.stringify({
+        type: 'status',
+        text: '你是第' + wss.clients.length + '位'
+    }));
 
-    ws.send('你是第' + wss.clients.length + '位');
-
-    wss.clients[wss.clients.length-1].kid=wss.clients.length-1;
+    wss.clients[wss.clients.length-1].kid = wss.clients.length-1;
 
     // 发送消息
     ws.on('message', function(jsonStr,flags) {
-
         var obj = eval('(' + jsonStr + ')');
-        wss.kid=this.kid;
+        wss.kid = this.kid;
         //console.err(Object.keys(ws));
         wss.broadcast(1,obj,wss.clients._ultron);
     });

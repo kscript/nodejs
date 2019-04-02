@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://libs.baidu.com/jquery/1.7.2/jquery.js"></script>
+    <script>!window.jQuery&&document.write('<script src="http://lib.sinaapp.com/js/jquery/1.7.2/jquery.min.js"><\/script>');</script>
+    <link rel="stylesheet" href="{~css}default.min.css">
+    <style>
+        .main{
+            padding-top:50px;
+        }
+        .lay-left{
+            width:620px;
+        }
+        .lay-right{
+            margin-left:10px;
+            width:360px;
+            height:400px;
+            background-color: #333;
+            overflow-y:scroll;
+        }
+        .sql-edit{
+            width:600px;
+            max-width:800px;
+            height:400px;
+            outline:0;
+            resize:none;
+        }
+        .sql-commit{
+            width:600px;
+            height:40px;
+            margin-top:20px;
+        }
+        .sql-res{
+            padding:10px;
+            color:#fff;
+            word-break:break-all; /*支持IE，chrome，FF不支持*/
+            word-wrap:break-word;/*支持IE，chrome，FF*/
+        }
+        .sel{
+            width:400px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="main row">
+    <div class="module">
+        <select class="sel" name="" id="sel">
+            <option value="-1">默认</option>
+            <option value="0">查询</option>
+            <option value="1">插入</option>
+        </select>
+        <div class="lay-left left">
+            <textarea class="sql-edit" name="" id="sql" >select * from app</textarea>
+            <input class="sql-commit" type="submit" id="sub"/>
+        </div>
+        <div class="lay-right left">
+            <div class="sql-res">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var ary=[
+        "select * from app",
+        "INSERT INTO `app` (`id`, `user`, `level`, `power`, `title`, `text`, `note`, `tag`, `view`, `reply`, `show`, `del`, `time`) VALUES (NULL, 'admin', '1', '10', '20161030 前端开发周报', '一道常被人轻视的前端 JS 面试题', '前端学习周报', '前端,周报', '1', '0', '1', '0', '"+new Date().getTime()+"')"
+    ];
+    $(".sel").on("change",function(){
+        commit({sql:ary[$(this).val()]});
+    })
+    $(".sql-commit").on("click",function(){
+        commit({
+            sql:$(".sql-edit").val()
+        })
+    })
+    function commit(data){
+        $.ajax({
+            url:'/',
+            type:'POST',
+            data:data,
+            success:function(data){
+                $(".sql-res").html(
+                    JSON.stringify(data).replace(/},/g,'},<br><br>')
+                )
+            }
+        })
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" href="{~css}default.min.css">
+	<script src="{~js}jquery-1.7.2.min.js"></script>
+	<!-- <script src="{~js}promise.js"></script> -->
+	<meta charset="utf-8">
+	<style>
+		.main{
+			margin:0 auto; 
+		}
+		.canvas{
+			background-color: #000;
+			
+			margin:0 auto;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="page">
+		<div class="main">
+			<canvas id="canvas" class="level0 canvas" width="2000" height="1000"></canvas>
+		</div>
+	</div>
+	<script>
+		var bes={
+			linear : function(e, a, g, f) {
+			    return g * e / f + a
+			},
+			easeInOutQuad : function(e, a, g, f) {
+			    e /= f / 2;
+			    if (e < 1) {
+			        return g / 2 * e * e + a
+			    }
+			    e--;
+			    return - g / 2 * (e * (e - 2) - 1) + a
+			},
+			easeOutQuad : function(e, a, g, f) {
+			    e /= f;
+			    return - g * e * (e - 2) + a
+			},
+			easeOutQuad : function(e, a, g, f) {
+			    e /= f;
+			    return - g * e * (e - 2) + a
+			},ease: function(e, a, g, f,ary,index) {
+				if(!pt.sh&&!pt.stop){
+					pt.sh=1;
+				}else{
+					pt.sh++;
+					if(pt.sh>40&&pt.sh<50){
+						console.debug(e,a,g,f,index);
+					}
+					if(pt.sh>50){
+						pt.stop=1;
+					}
+				}
+				e/=f;
+				return e*(e*(g-100)+a)*(e%5+10)+200;
+				return e*(e*g+a)*(e%10);
+			},_ease: function(e, a, g, f) {
+				e/=f;
+				return e*(e*g+a)*(e%5+5);
+			},
+			easeInCubic : function(e, a, g, f) {
+			    e /= f;
+			    return g * e * e * e + a
+			},
+			easeOutCubic : function(e, a, g, f) {
+			    e /= f;
+			    e--;
+			    return g * (e * e * e + 1) + a
+			},
+			easeInOutCubic : function(e, a, g, f) {
+			    e /= f / 2;
+			    if (e < 1) {
+			        return g / 2 * e * e * e + a
+			    }
+			    e -= 2;
+			    return g / 2 * (e * e * e + 2) + a
+			},
+			easeInQuart : function(e, a, g, f) {
+			    e /= f;
+			    return g * e * e * e * e + a
+			},
+			easeOutQuart : function(e, a, g, f) {
+			    e /= f;
+			    e--;
+			    return - g * (e * e * e * e - 1) + a
+			},
+			easeInOutQuart : function(e, a, g, f) {
+			    e /= f / 2;
+			    if (e < 1) {
+			        return g / 2 * e * e * e * e + a
+			    }
+			    e -= 2;
+			    return - g / 2 * (e * e * e * e - 2) + a
+			},
+			easeInQuint : function(e, a, g, f) {
+			    e /= f;
+			    return g * e * e * e * e * e + a
+			},
+			easeOutQuint : function(e, a, g, f) {
+			    e /= f;
+			    e--;
+			    return g * (e * e * e * e * e + 1) + a
+			},
+			easeInOutQuint : function(e, a, g, f) {
+			    e /= f / 2;
+			    if (e < 1) {
+			        return g / 2 * e * e * e * e * e + a
+			    }
+			    e -= 2;
+			    return g / 2 * (e * e * e * e * e + 2) + a
+			},
+			easeInSine : function(e, a, g, f) {
+			    return - g * Math.cos(e / f * (Math.PI / 2)) + g + a
+			},
+			easeOutSine : function(e, a, g, f) {
+			    return g * Math.sin(e / f * (Math.PI / 2)) + a
+			},
+			easeInOutSine : function(e, a, g, f) {
+			    return - g / 2 * (Math.cos(Math.PI * e / f) - 1) + a
+			},
+			easeInExpo : function(e, a, g, f) {
+			    return g * Math.pow(2, 10 * (e / f - 1)) + a
+			},
+			easeOutExpo : function(e, a, g, f) {
+			    return g * ( - Math.pow(2, -10 * e / f) + 1) + a
+			},
+			easeInOutExpo : function(e, a, g, f) {
+			    return g * ( - Math.pow(2, -10 * e / f) + 1) + a
+			},
+			easeInCirc : function(e, a, g, f) {
+			    e /= f;
+			    return - g * (Math.sqrt(1 - e * e) - 1) + a
+			},
+			easeOutCirc : function(e, a, g, f) {
+			    e /= f;
+			    e--;
+			    return g * Math.sqrt(1 - e * e) + a
+			},
+			easeInOutCirc : function(e, a, g, f) {
+			    e /= f / 2;
+			    if (e < 1) {
+			        return - g / 2 * (Math.sqrt(1 - e * e) - 1) + a
+			    }
+			    e -= 2;
+			    return g / 2 * (Math.sqrt(1 - e * e) + 1) + a
+			},
+			easeInOutElastic : function(g, e, k, j, f, i) {
+			    if (g == 0) {
+			        return e
+			    }
+			    if ((g /= j / 2) == 2) {
+			        return e + k
+			    }
+			    if (!i) {
+			        i = j * (0.3 * 1.5)
+			    }
+			    if (!f || f < Math.abs(k)) {
+			        f = k;
+			        var h = i / 4
+			    } else {
+			        var h = i / (2 * Math.PI) * Math.asin(k / f)
+			    }
+			    if (g < 1) {
+			        return - 0.5 * (f * Math.pow(2, 10 * (g -= 1)) * Math.sin((g * j - h) * (2 * Math.PI) / i)) + e
+			    }
+			    return f * Math.pow(2, -10 * (g -= 1)) * Math.sin((g * j - h) * (2 * Math.PI) / i) * 0.5 + k + e
+			},
+			easeInElastic : function(g, e, k, j, f, i) {
+			    if (g == 0) {
+			        return e
+			    }
+			    if ((g /= j) == 1) {
+			        return e + k
+			    }
+			    if (!i) {
+			        i = j * 0.3
+			    }
+			    if (!f || f < Math.abs(k)) {
+			        f = k;
+			        var h = i / 4
+			    } else {
+			        var h = i / (2 * Math.PI) * Math.asin(k / f)
+			    }
+			    return - (f * Math.pow(2, 10 * (g -= 1)) * Math.sin((g * j - h) * (2 * Math.PI) / i)) + e
+			},
+			easeOutElastic : function(g, e, k, j, f, i) {
+			    if (g == 0) {
+			        return e
+			    }
+			    if ((g /= j) == 1) {
+			        return e + k
+			    }
+			    if (!i) {
+			        i = j * 0.3
+			    }
+			    if (!f || f < Math.abs(k)) {
+			        f = k;
+			        var h = i / 4
+			    } else {
+			        var h = i / (2 * Math.PI) * Math.asin(k / f)
+			    }
+			    return (f * Math.pow(2, -10 * g) * Math.sin((g * j - h) * (2 * Math.PI) / i) + k + e)
+			},
+			easeInOutBack : function(e, a, h, g, f) {
+			    if (f == undefined) {
+			        f = 1.70158
+			    }
+			    if ((e /= g / 2) < 1) {
+			        return h / 2 * (e * e * (((f *= (1.525)) + 1) * e - f)) + a
+			    }
+			    return h / 2 * ((e -= 2) * e * (((f *= (1.525)) + 1) * e + f) + 2) + a
+			},
+			easeInBack : function(e, a, h, g, f) {
+			    if (f == undefined) {
+			        f = 1.70158
+			    }
+			    return h * (e /= g) * e * ((f + 1) * e - f) + a
+			},
+			easeOutBack : function(e, a, h, g, f) {
+			    if (f == undefined) {
+			        f = 1.70158
+			    }
+			    return h * ((e = e / g - 1) * e * ((f + 1) * e + f) + 1) + a
+			}
+		};
+
+		(function(window,document){
+			var cache={};
+			var that;
+			function Part(conf) {
+				return new Part.fn.init(conf);
+			}
+
+			Part.fn=Part.prototype={
+				init:function(conf){
+					that=this;
+					Part.fn.extend(conf,that);
+					that.cxtWidth=that.ele.width;
+					that.cxtHeight=that.ele.height;
+					return this;
+				}
+			}
+			
+			//继承来源 要获得继承的对象
+			//Part.extend 是内部使用的继承，会被覆盖
+			//
+			Part.extend=Part.fn.extend=function (source,target){
+				if(!target){
+					target=this;
+				}
+				for(var key in source){
+					target[key]=source[key];
+				}
+				return target;
+			}
+
+			Part.fn.extend({
+				draw:function(fn){
+					fn&&fn.call(that);
+					// var a=arguments;
+					// var img=new Image();
+
+					// img.onload=function(){
+					// 	img.width=that.cols;
+					// 	img.height=that.rows;
+					// 	that.cxt.drawImage(img,that.x,that.y,that.cols,that.rows);
+					// 	fn&&fn.call(that);
+					// }
+					// img.src=that.src;
+				},
+				rand:function(max){
+					if(isNaN(max))return 0;
+					return Math.floor(Math.random()*max+1);
+				},
+				/*三次贝塞尔曲线*/
+				bessel:function (p0,p1,p2,p3,t) {
+					var cx = 3*(p1.x-p0.x);
+					var bx = 3*(p2.x-p1.x)-cx;
+					var ax = p3.x-p0.x-cx-bx;
+					var cy = 3*(p1.y-p0.y);
+					var by = 3*(p2.y-p1.y)-cy;
+					var ay = p3.y-p0.y-cy-by;
+					var tx = ax*(t*t*t)+bx*(t*t)+cx*t+p0.x;
+					var ty = ay*(t*t*t)+by*(t*t)+cy*t+p0.y;
+					//t是贝塞尔曲线上的一点
+					//tx,ty是计算出的点的坐标
+					return [tx,ty,ax,bx,cx,ay,by,cy];
+				}
+			})
+
+			Part.fn.init.prototype=Part.fn;
+			window.Part=Part;
+		})(window,document);
+
+		var canvas=document.getElementById("canvas");
+		var cxt=canvas.getContext("2d");
+		var imgData;
+		var besAry=Object.keys(bes);
+		var pt=new Part({
+			x:1000,
+			y:300,
+			num:0,
+			speed:1,
+			count:300,
+			offset:10,
+			cols:200,
+			rows:150,
+			delay:3000,
+			width:canvas.width,
+			height:canvas.height,
+			cxt:cxt,
+			ele:canvas,
+			src:"{~img}4.png",
+			color:"#006eff",
+			duration: 4000,//持续时间
+			interval: 10,//间隔
+			// ease:"easeOutQuint",
+			ease:besAry[rand(besAry.length-1)],
+			ratioX:1,
+			ratioY:1
+		});
+
+		pt.draw(function(){
+			var that=this;
+			that.imgData=[]//that.cxt.getImageData(that.x,that.y,that.cols,that.rows);
+			makeCoor.call(that);
+			// drawData.call(that);
+			run(that);
+		});
+
+		function makeCoor(){
+			var that=this;
+			var data=that.imgData.data;
+			var width=that.cols;
+			var res=[];
+			var coor;
+			for(var i=0,len=data.length;i<len;i+=4){
+				if(data[i]>250){
+					coor={
+						x0:that.x,
+						y0:that.y,
+						x1:(i/4)%width+(Math.random() - 0.5)*that.offset,
+						y1:Math.floor(i/4/width)+(Math.random() - 0.5)*that.offset,
+						fillStyle:that.color,
+						delay:Math.floor(i/4/width)/20,
+						currTime: 0,
+						count: 0,
+						duration:parseInt(that.duration / 16.66) + 1,
+						interval:parseInt(Math.random() * 10 * that.interval),
+						ease:that.ease,
+						ratioX:that.ratioX,
+						ratioY:that.ratioY,
+						index:i
+					};
+					res.push(coor);
+				}
+			}
+			that.data=res;
+			return res;
+		}
+		function drawData(that,mod){
+			that=that||this;
+			var data=that.data;
+			var cxt=that.cxt;
+			var color=data[0].fillStyle;
+			cxt.clearRect(0,0,that.cxtWidth,that.cxtHeight);
+
+			cxt.fillStyle=color;
+			var re;
+			var k = 0,
+				b = 0,
+				c = 0,
+				j = 3,
+				g = 3,
+				e='';
+			for (var i = 0,len=data.length; i < len-3; i++) {
+				if(color!=data[i].fillStyle){
+					cxt.fillStyle=data[i].fillStyle;
+					color=data[i].fillStyle;
+				}
+				k = data[i].currTime;
+				b = data[i].duration;
+				c = data[i].interval;
+				e = data[i].ease;
+				cxt.fillRect(
+					bes[e]((k - c) * j, data[i].x0, (data[i].x1 - data[i].x0) * j, b,[k,b,c,j,g],i),
+					bes[e]((k - c) * g, data[i].y0, (data[i].y1 - data[i].y0) * g, b,[k,b,c,j,g],i),
+				1,1);
+				 data[i].currTime += Math.random() + 0.5
+			}
+
+			that.num+=that.speed;
+		}
+		function run(that){
+			drawData.call(pt);
+			if(that.num>that.count||that.num<0){
+				cancelAnimationFrame(that.rid);
+			}else{
+				that.rid=requestAnimationFrame(run);			
+			}
+		}
+
+
+		function rand(max,mod){
+			if(isNaN(max))return 0;
+			if(mod){max=max*2};
+			var num=Math.floor(Math.random()*max+1-(mod?max/2:0));
+			return num;
+		}
+	</script>
+</body>
+</html>
